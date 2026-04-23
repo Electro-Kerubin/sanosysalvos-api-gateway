@@ -1,0 +1,79 @@
+#Las urls todavia no estan definidas ya que aun no levantamos ninguna terminal.
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  
+  # Configuracion para validar los Tokens JWT
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # URL del microservicio de auth que emite los tokens
+          issuer-uri: ${AUTH_ISSUER_URL:http://localhost:8081}
+
+  cloud:
+    gateway:
+      # 1. Configuración Global de CORS
+      globalcors:
+        add-to-auto-webflux-endpoint: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*" #url frontend
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+
+      # 2. Definición de Rutas
+      routes:
+        # Auth
+        - id: auth-service
+          uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/auth/**
+
+        # Reportes
+        - id: reporte-service
+          uri: ${REPORTE_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/reportes/**
+
+        # Geolocalizacion
+        - id: geolocalizacion-service
+          uri: ${GEO_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/geo/**
+
+        # Motor de Coincidencias
+        - id: coincidencias-service
+          uri: ${MATCH_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/api/coincidencias/**
+
+        # Notificaciones
+        - id: notificaciones-service
+          uri: ${NOTIFY_SERVICE_URL:http://localhost:8085}
+          predicates:
+            - Path=/api/notificaciones/**
+
+        # Storage
+        - id: storage-service
+          uri: ${STORAGE_SERVICE_URL:http://localhost:8086}
+          predicates:
+            - Path=/api/storage/**
+
+# 3. Monitoreo y Salud (Actuator)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, gateway
+  endpoint:
+    health:
+      show-details: always
