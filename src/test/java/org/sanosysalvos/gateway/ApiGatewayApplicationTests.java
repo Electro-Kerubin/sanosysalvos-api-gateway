@@ -1,10 +1,11 @@
 package org.sanosysalvos.gateway;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.http.HttpStatus;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ApiGatewayApplicationTests {
@@ -25,7 +26,7 @@ class ApiGatewayApplicationTests {
                 // Como no hay microservicio detrás durante el test, puede dar 503 (Servicio no disponible)
                 // o 404 (No encontrado), pero LO IMPORTANTE es que la seguridad lo deje pasar
                 // y NO devuelva un 401 (No autorizado).
-                .expectStatus().isNotEqualTo(HttpStatus.UNAUTHORIZED);
+                .expectStatus().value(statusCode -> assertNotEquals(401, statusCode));
     }
 
     @Test
