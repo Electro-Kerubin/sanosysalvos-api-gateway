@@ -1,4 +1,4 @@
-package org.sanosysalvos.gateway.config;
+package org.sanosysalvos.gateway.security;
 
 import java.util.Base64;
 

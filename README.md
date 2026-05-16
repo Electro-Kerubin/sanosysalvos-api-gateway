@@ -1,43 +1,54 @@
 # sanosysalvos-api-gateway
 
-## Docker
+API Gateway y punto de entrada único de Sanos y Salvos.
 
-Este gateway está pensado para correr en Docker y conectarse a los microservicios de otros repositorios mediante una red compartida llamada `sanosysalvos-network`.
+## Qué hace
 
-### 1. Crear la red compartida
+Este repositorio no contiene lógica de negocio de dominios ni persistencia. Su responsabilidad es centralizar autenticación, autorización, logging, trazabilidad, manejo de errores y ruteo hacia los microservicios.
 
-```bash
-docker network create sanosysalvos-network
-```
-
-### 2. Levantar los microservicios en sus repositorios
-
-Cada microservicio debe publicar su puerto interno en la misma red y usar un nombre de contenedor o servicio coincidente con estas variables:
-
-- `auth-service:8081`
-- `reporte-service:8082`
-- `geo-service:8083`
-- `coincidencias-service:8084`
-- `notificaciones-service:8085`
-- `storage-service:8086`
-
-### 3. Levantar el gateway
-
-```bash
-docker compose up --build
-```
-
-### 4. Rutas disponibles para el frontend
+## Rutas
 
 - `/api/auth/**`
+- `/api/usuarios/**`
 - `/api/reportes/**`
+- `/api/mascotas/**`
+- `/api/contactos/**`
+- `/api/especies/**`
+- `/api/razas/**`
 - `/api/geo/**`
 - `/api/coincidencias/**`
 - `/api/notificaciones/**`
 - `/api/storage/**`
 
-### 5. Salud
+## Ejecutar localmente con Docker
 
-- `/actuator/health`
-- `/actuator/info`
-- `/actuator/gateway`
+Si vas a conectar el gateway con microservicios levantados en otros repositorios, crea primero la red compartida:
+
+```bash
+docker network create sanosysalvos-network
+```
+
+```bash
+docker compose up --build -d
+```
+
+## Variables de entorno
+
+- `JWT_SECRET`
+- `AUTH_SERVICE_URL`
+- `USUARIOS_SERVICE_URL`
+- `REPORTE_SERVICE_URL`
+- `MASCOTAS_SERVICE_URL`
+- `CONTACTOS_SERVICE_URL`
+- `ESPECIES_SERVICE_URL`
+- `RAZAS_SERVICE_URL`
+- `GEO_SERVICE_URL`
+- `MATCH_SERVICE_URL`
+- `NOTIFY_SERVICE_URL`
+- `STORAGE_SERVICE_URL`
+
+## Salud
+
+- `GET /actuator/health`
+- `GET /actuator/info`
+- `GET /actuator/gateway`

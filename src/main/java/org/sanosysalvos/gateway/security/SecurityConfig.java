@@ -1,4 +1,4 @@
-package org.sanosysalvos.gateway.config;
+package org.sanosysalvos.gateway.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .pathMatchers("/api/auth/**", "/actuator/**").permitAll()
+                        .pathMatchers("/api/auth/**", "/actuator/health", "/actuator/info", "/actuator/gateway", "/actuator/gateway/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
