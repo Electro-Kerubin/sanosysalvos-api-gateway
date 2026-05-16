@@ -6,13 +6,14 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      default-filters:
-        - RemoveRequestHeader=Cookie
       globalcors:
-        add-to-auto-webflux-endpoint: true
-        cors-configurations:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
+            allowedOriginPatterns:
+              - http://localhost:3000
+              - http://127.0.0.1:3000
+              - https://*.vercel.app
             allowedMethods:
               - GET
               - POST
@@ -21,65 +22,37 @@ spring:
               - OPTIONS
             allowedHeaders: "*"
             exposedHeaders:
+              - Authorization
+              - Content-Type
               - X-Correlation-Id
               - X-Request-Id
+            allowCredentials: true
+            maxAge: 3600
       routes:
         - id: auth-service
-          uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+          uri: http://sanosysalvos-auth-service:8081
           predicates:
             - Path=/api/auth/**
-          filters:
-            - PreserveHostHeader
-
-        - id: usuarios-service
-          uri: ${USUARIOS_SERVICE_URL:http://localhost:8082}
-          predicates:
-            - Path=/api/usuarios/**
 
         - id: reportes-service
-          uri: ${REPORTE_SERVICE_URL:http://localhost:8083}
+          uri: http://sanosysalvos-reportes-service:8082
           predicates:
             - Path=/api/reportes/**
 
-        - id: mascotas-service
-          uri: ${MASCOTAS_SERVICE_URL:http://localhost:8084}
-          predicates:
-            - Path=/api/mascotas/**
-
-        - id: contactos-service
-          uri: ${CONTACTOS_SERVICE_URL:http://localhost:8085}
-          predicates:
-            - Path=/api/contactos/**
-
-        - id: especies-service
-          uri: ${ESPECIES_SERVICE_URL:http://localhost:8086}
-          predicates:
-            - Path=/api/especies/**
-
-        - id: razas-service
-          uri: ${RAZAS_SERVICE_URL:http://localhost:8087}
-          predicates:
-            - Path=/api/razas/**
-
-        - id: geolocalizacion-service
-          uri: ${GEO_SERVICE_URL:http://localhost:8088}
+        - id: geolocation-service
+          uri: http://sanosysalvos-geolocation-service:8084
           predicates:
             - Path=/api/geo/**
 
-        - id: coincidencias-service
-          uri: ${MATCH_SERVICE_URL:http://localhost:8089}
+        - id: matching-service
+          uri: http://sanosysalvos-matching-service:8083
+          predicates:
+            - Path=/api/matching/**
+
+        - id: matching-service-legacy-alias
+          uri: http://sanosysalvos-matching-service:8083
           predicates:
             - Path=/api/coincidencias/**
-
-        - id: notificaciones-service
-          uri: ${NOTIFY_SERVICE_URL:http://localhost:8090}
-          predicates:
-            - Path=/api/notificaciones/**
-
-        - id: storage-service
-          uri: ${STORAGE_SERVICE_URL:http://localhost:8091}
-          predicates:
-            - Path=/api/storage/**
 
 management:
   endpoints:
