@@ -84,11 +84,21 @@ jobs:
             JWT_SECRET=${JWT_SECRET}
             EOF
 
-            # --- docker-compose.yml (solo se escribe si no existe) ---
-            if [ ! -f docker-compose.yml ]; then
-              cat > docker-compose.yml <<'COMPOSE_EOF'
+            # --- docker-compose.yml (se sobreescribe en cada deploy para mantener valores actualizados) ---
+            cat > docker-compose.yml <<'COMPOSE_EOF'
             version: '3.8'
             services:
+              eureka-server:
+                image: springcloud/eureka:latest
+                container_name: sanosysalvos-eureka
+                restart: unless-stopped
+                ports:
+                  - "8761:8761"
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+                  interval: 10s
+                  timeout: 5s
+                  retries: 5
               postgres:
                 image: postgres:16-alpine
                 container_name: sanosysalvos-postgres
@@ -134,8 +144,11 @@ jobs:
                   DB_USER: ${DB_USER}
                   DB_PASSWORD: ${DB_PASSWORD}
                   JWT_SECRET: ${JWT_SECRET}
+                  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
                 depends_on:
                   postgres:
+                    condition: service_healthy
+                  eureka-server:
                     condition: service_healthy
               report-service:
                 image: ${DOCKERHUB_USERNAME}/sanosysalvos-reporte-service:latest
@@ -152,10 +165,13 @@ jobs:
                   RABBITMQ_PORT: 5672
                   RABBITMQ_USERNAME: ${RABBITMQ_USER}
                   RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+                  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
                 depends_on:
                   postgres:
                     condition: service_healthy
                   rabbitmq:
+                    condition: service_healthy
+                  eureka-server:
                     condition: service_healthy
               geolocation-service:
                 image: ${DOCKERHUB_USERNAME}/sanosysalvos-geolocation-service:latest
@@ -167,8 +183,11 @@ jobs:
                   GEO_DB_URL: jdbc:postgresql://postgres:5432/sanosysalvos
                   GEO_DB_USER: ${DB_USER}
                   GEO_DB_PASSWORD: ${DB_PASSWORD}
+                  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
                 depends_on:
                   postgres:
+                    condition: service_healthy
+                  eureka-server:
                     condition: service_healthy
               matching-service:
                 image: ${DOCKERHUB_USERNAME}/sanosysalvos-matching-service:latest
@@ -185,6 +204,7 @@ jobs:
                   RABBITMQ_USERNAME: ${RABBITMQ_USER}
                   RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
                   GEOLOCATION_SERVICE_URL: http://geolocation-service:8084
+                  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
                 depends_on:
                   postgres:
                     condition: service_healthy
@@ -192,6 +212,8 @@ jobs:
                     condition: service_healthy
                   geolocation-service:
                     condition: service_started
+                  eureka-server:
+                    condition: service_healthy
               api-gateway:
                 image: ${DOCKERHUB_USERNAME}/sanosysalvos-api-gateway:latest
                 container_name: sanosysalvos-api-gateway
@@ -200,15 +222,18 @@ jobs:
                   - "8080:8080"
                 environment:
                   JWT_SECRET: ${JWT_SECRET}
-                  AUTH_SERVICE_URL: http://auth-service:8081
-                  REPORTE_SERVICE_URL: http://report-service:8083
-                  GEO_SERVICE_URL: http://geolocation-service:8084
-                  MATCH_SERVICE_URL: http://matching-service:8085
+                  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
                 depends_on:
-                  - auth-service
-                  - report-service
-                  - geolocation-service
-                  - matching-service
+                  eureka-server:
+                    condition: service_healthy
+                  auth-service:
+                    condition: service_started
+                  report-service:
+                    condition: service_started
+                  geolocation-service:
+                    condition: service_started
+                  matching-service:
+                    condition: service_started
             volumes:
               postgres_data:
               rabbitmq_data:
@@ -216,7 +241,6 @@ jobs:
               default:
                 name: sanosysalvos-network
             COMPOSE_EOF
-            fi
 
             # --- Deploy ---
             sudo docker compose pull api-gateway

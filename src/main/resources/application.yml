@@ -53,15 +53,15 @@ spring:
           predicates:
             - Path=/api/matching/**
 
-        - id: matching-service-legacy-alias
-          uri: lb://coincidencias
-          predicates:
-            - Path=/api/coincidencias/**
+        # - id: matching-service-legacy-alias
+        #   uri: lb://coincidencias
+        #   predicates:
+        #     - Path=/api/coincidencias/**
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka}
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka-server:8761/eureka}
 
 
 management:
