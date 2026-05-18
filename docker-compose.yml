@@ -12,16 +12,16 @@ services:
     environment:
       JWT_SECRET: ${JWT_SECRET:-c2Fub3N5c2Fsdm9zLXNlY3JldC1rZXktcGFyYS1qd3QtMjAyNg==}
       AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://auth-service:8081}
-      USUARIOS_SERVICE_URL: ${USUARIOS_SERVICE_URL:-http://usuarios-service:8082}
+      #USUARIOS_SERVICE_URL: ${USUARIOS_SERVICE_URL:-http://usuarios-service:8082}
       REPORTE_SERVICE_URL: ${REPORTE_SERVICE_URL:-http://reporte-service:8083}
-      MASCOTAS_SERVICE_URL: ${MASCOTAS_SERVICE_URL:-http://mascotas-service:8084}
-      CONTACTOS_SERVICE_URL: ${CONTACTOS_SERVICE_URL:-http://contactos-service:8085}
-      ESPECIES_SERVICE_URL: ${ESPECIES_SERVICE_URL:-http://especies-service:8086}
-      RAZAS_SERVICE_URL: ${RAZAS_SERVICE_URL:-http://razas-service:8087}
+      #MASCOTAS_SERVICE_URL: ${MASCOTAS_SERVICE_URL:-http://mascotas-service:8084}
+      #CONTACTOS_SERVICE_URL: ${CONTACTOS_SERVICE_URL:-http://contactos-service:8085}
+      #ESPECIES_SERVICE_URL: ${ESPECIES_SERVICE_URL:-http://especies-service:8086}
+      #RAZAS_SERVICE_URL: ${RAZAS_SERVICE_URL:-http://razas-service:8087}
       GEO_SERVICE_URL: ${GEO_SERVICE_URL:-http://geo-service:8088}
       MATCH_SERVICE_URL: ${MATCH_SERVICE_URL:-http://coincidencias-service:8089}
-      NOTIFY_SERVICE_URL: ${NOTIFY_SERVICE_URL:-http://notificaciones-service:8090}
-      STORAGE_SERVICE_URL: ${STORAGE_SERVICE_URL:-http://storage-service:8091}
+      #NOTIFY_SERVICE_URL: ${NOTIFY_SERVICE_URL:-http://notificaciones-service:8090}
+      #STORAGE_SERVICE_URL: ${STORAGE_SERVICE_URL:-http://storage-service:8091}
 
 networks:
   default:
