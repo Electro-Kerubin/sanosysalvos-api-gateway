@@ -6,6 +6,10 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
       globalcors:
         add-to-simple-url-handler-mapping: true
         corsConfigurations:
@@ -30,29 +34,35 @@ spring:
             maxAge: 3600
       routes:
         - id: auth-service
-          uri: http://sanosysalvos-auth-service:8081
+          uri: lb://autenticacion
           predicates:
             - Path=/api/auth/**
 
         - id: reportes-service
-          uri: http://sanosysalvos-reportes-service:8082
+          uri: lb://reportes
           predicates:
             - Path=/api/reportes/**
 
         - id: geolocation-service
-          uri: http://sanosysalvos-geolocation-service:8084
+          uri: lb://geolocalizacion
           predicates:
             - Path=/api/geo/**
 
         - id: matching-service
-          uri: http://sanosysalvos-matching-service:8083
+          uri: lb://coincidencias
           predicates:
             - Path=/api/matching/**
 
         - id: matching-service-legacy-alias
-          uri: http://sanosysalvos-matching-service:8083
+          uri: lb://coincidencias
           predicates:
             - Path=/api/coincidencias/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka}
+
 
 management:
   endpoints:

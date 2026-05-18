@@ -29,6 +29,7 @@ public class GatewayGlobalErrorWebExceptionHandler implements WebExceptionHandle
     }
 
     @Override
+    @SuppressWarnings("null")
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         ServerHttpResponse response = exchange.getResponse();
         if (response.isCommitted()) {

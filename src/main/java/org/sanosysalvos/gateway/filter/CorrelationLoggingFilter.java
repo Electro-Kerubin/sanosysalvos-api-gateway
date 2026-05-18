@@ -61,7 +61,7 @@ public class CorrelationLoggingFilter implements GlobalFilter, Ordered {
     private void logRequest(ServerWebExchange exchange, String correlationId, Instant start) {
         HttpStatusCode status = exchange.getResponse().getStatusCode();
         long durationMs = Duration.between(start, Instant.now()).toMillis();
-        String method = exchange.getRequest().getMethodValue();
+        String method = exchange.getRequest().getMethod() != null ? exchange.getRequest().getMethod().name() : "UNKNOWN";
         String path = exchange.getRequest().getPath().value();
         String statusValue = status != null ? String.valueOf(status.value()) : "500";
 
