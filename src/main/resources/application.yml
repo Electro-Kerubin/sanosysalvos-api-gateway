@@ -1,0 +1,74 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns:
+              - http://localhost:3000
+              - http://127.0.0.1:3000
+              - https://*.vercel.app
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            exposedHeaders:
+              - Authorization
+              - Content-Type
+              - X-Correlation-Id
+              - X-Request-Id
+            allowCredentials: true
+            maxAge: 3600
+      routes:
+        - id: auth-service
+          uri: lb://autenticacion
+          predicates:
+            - Path=/api/auth/**
+
+        - id: reportes-service
+          uri: lb://reportes
+          predicates:
+            - Path=/api/reportes/**
+
+        - id: geolocation-service
+          uri: lb://geolocalizacion
+          predicates:
+            - Path=/api/geo/**
+
+        - id: matching-service
+          uri: lb://coincidencias
+          predicates:
+            - Path=/api/matching/**
+
+        # - id: matching-service-legacy-alias
+        #   uri: lb://coincidencias
+        #   predicates:
+        #     - Path=/api/coincidencias/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka-server:8761/eureka}
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    health:
+      show-details: always

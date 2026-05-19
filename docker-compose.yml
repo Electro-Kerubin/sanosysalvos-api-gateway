@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sanosysalvos-api-gateway
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-c2Fub3N5c2Fsdm9zLXNlY3JldC1rZXktcGFyYS1qd3QtMjAyNg==}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:-http://eureka-server:8761/eureka}
+
+networks:
+  default:
+    external: true
+    name: sanosysalvos-network
