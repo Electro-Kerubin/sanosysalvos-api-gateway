@@ -63,6 +63,16 @@ spring:
           predicates:
             - Path=/api/geo/**
 
+        - id: coordenadas-service
+          uri: lb://geolocalizacion
+          predicates:
+            - Path=/api/coordenadas/**
+
+        - id: comunas-service
+          uri: lb://geolocalizacion
+          predicates:
+            - Path=/api/comunas/**
+
         - id: matching-service
           uri: lb://coincidencias
           predicates:
