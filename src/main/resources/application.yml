@@ -43,6 +43,21 @@ spring:
           predicates:
             - Path=/api/reportes/**
 
+        - id: mascotas-service
+          uri: lb://reportes
+          predicates:
+            - Path=/api/mascotas/**
+
+        - id: contactos-service
+          uri: lb://reportes
+          predicates:
+            - Path=/api/contactos/**
+
+        - id: catalogos-service
+          uri: lb://reportes
+          predicates:
+            - Path=/api/catalogos/**
+
         - id: geolocation-service
           uri: lb://geolocalizacion
           predicates:
