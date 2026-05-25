@@ -77,11 +77,13 @@ spring:
           uri: lb://coincidencias
           predicates:
             - Path=/api/matching/**
+          filters:
+            - RewritePath=/api/matching/(?<segment>.*), /api/coincidencias/${segment}
 
-        # - id: matching-service-legacy-alias
-        #   uri: lb://coincidencias
-        #   predicates:
-        #     - Path=/api/coincidencias/**
+        - id: matching-service-coincidencias
+          uri: lb://coincidencias
+          predicates:
+            - Path=/api/coincidencias/**
 
 eureka:
   client:
