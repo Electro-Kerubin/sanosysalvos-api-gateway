@@ -43,6 +43,31 @@ spring:
           predicates:
             - Path=/api/reportes/**
 
+        - id: mascotas-service
+          uri: lb://reportes
+          predicates:
+            - Path=/api/mascotas/**
+
+        - id: contactos-service
+          uri: lb://reportes
+          predicates:
+            - Path=/api/contactos/**
+
+        - id: coordenadas-service
+          uri: lb://reportes
+          predicates:
+            - Path=/api/coordenadas/**
+
+        - id: quick-report-service
+          uri: lb://reportes
+          predicates:
+            - Path=/reports/quick
+
+        - id: pets-service
+          uri: lb://reportes
+          predicates:
+            - Path=/pets/**
+
         - id: geolocation-service
           uri: lb://geolocalizacion
           predicates:
@@ -57,6 +82,41 @@ spring:
         #   uri: lb://coincidencias
         #   predicates:
         #     - Path=/api/coincidencias/**
+
+        - id: comunas-service
+          uri: lb://geolocalizacion
+          predicates:
+            - Path=/api/comunas/**
+
+        - id: catalog-service
+          uri: lb://catalogos
+          predicates:
+            - Path=/api/catalogos/**
+
+        - id: notifications-service
+          uri: lb://notificaciones
+          predicates:
+            - Path=/api/notificaciones/**
+
+        - id: rescue-rooms-service
+          uri: lb://notificaciones
+          predicates:
+            - Path=/rescue-rooms/**
+
+        - id: websocket-service
+          uri: lb:ws://notificaciones
+          predicates:
+            - Path=/socket.io/**
+
+        - id: payment-service
+          uri: lb://pagos
+          predicates:
+            - Path=/payments/**
+
+        - id: storage-service
+          uri: lb://storage
+          predicates:
+            - Path=/api/storage/**
 
 eureka:
   client:
