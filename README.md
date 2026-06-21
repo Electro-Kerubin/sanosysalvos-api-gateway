@@ -4,26 +4,32 @@ API Gateway y punto de entrada único de Sanos y Salvos.
 
 ## Qué hace
 
-Este repositorio no contiene lógica de negocio de dominios ni persistencia. Su responsabilidad es centralizar autenticación, autorización, logging, trazabilidad, manejo de errores y ruteo hacia los microservicios.
+Este repositorio no contiene lógica de negocio de dominios ni persistencia. Su responsabilidad es centralizar autenticación, autorización, logging, trazabilidad, manejo de errores y ruteo hacia los microservicios, integrándose con **Eureka Server** para el descubrimiento dinámico de servicios.
+
+## Stack Tecnológico
+
+- **Java 21**
+- **Spring Boot 3.3.0**
+- **Spring Cloud (Gateway, Eureka Client)**
+- **Spring Security / OAuth2 Resource Server**
+- **Docker & Docker Compose**
+- **GitHub Actions (CI/CD)**
 
 ## Rutas
 
+El ruteo se realiza de forma dinámica hacia los microservicios registrados en Eureka. Las rutas de los microservicios actualmente integrados incluyen:
+
 - `/api/auth/**`
-- `/api/usuarios/**`
 - `/api/reportes/**`
-- `/api/mascotas/**`
-- `/api/contactos/**`
-- `/api/especies/**`
-- `/api/razas/**`
 - `/api/geo/**`
 - `/api/coincidencias/**`
-- `/api/notificaciones/**`
-- `/api/storage/**`
 
 ## Ejecutar localmente con Docker
 
-Si vas a conectar el gateway con microservicios levantados en otros repositorios, crea primero la red compartida:
+El proyecto incluye un archivo `docker-compose.yml` en la carpeta `infra/` que levanta la infraestructura base (Eureka, PostgreSQL, RabbitMQ) y los microservicios actuales.
 
+1. Crea tu archivo `.env` dentro de `infra/` copiando el `.env.example` y configurando las variables.
+2. Crea la red compartida:
 ```bash
 docker network create sanosysalvos-network
 ```
