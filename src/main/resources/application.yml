@@ -18,7 +18,7 @@ spring:
               - http://localhost:3000
               - http://3.237.84.42
               - https://*.vercel.app
-              - http://eureka-server:8761/eureka
+              - http://eureka-server:8761/eureka/
             allowedMethods:
               - GET
               - POST
@@ -129,7 +129,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka-server:8761/eureka}
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka-server:8761/eureka/}
 
 
 management:
