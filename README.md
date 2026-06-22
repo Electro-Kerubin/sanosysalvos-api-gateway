@@ -23,6 +23,8 @@ El ruteo se realiza de forma dinámica hacia los microservicios registrados en E
 - `/api/reportes/**`
 - `/api/geo/**`
 - `/api/coincidencias/**`
+- `/api/notificaciones/**`
+- `/api/storage/**`
 
 ## Ejecutar localmente con Docker
 
