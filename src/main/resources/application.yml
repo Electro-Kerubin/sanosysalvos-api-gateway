@@ -78,6 +78,11 @@ spring:
           predicates:
             - Path=/api/matching/**
 
+        - id: notification-service
+          uri: lb://notificaciones
+          predicates:
+            - Path=/api/notificaciones/**
+
         # - id: matching-service-legacy-alias
         #   uri: lb://coincidencias
         #   predicates:
