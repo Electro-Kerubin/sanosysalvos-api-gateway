@@ -54,7 +54,7 @@ spring:
             - Path=/api/contactos/**
 
         - id: coordenadas-service
-          uri: lb://reportes
+          uri: lb://geolocalizacion
           predicates:
             - Path=/api/coordenadas/**
 
@@ -89,7 +89,7 @@ spring:
             - Path=/api/comunas/**
 
         - id: catalog-service
-          uri: lb://catalogos
+          uri: lb://reportes
           predicates:
             - Path=/api/catalogos/**
 
