@@ -73,8 +73,8 @@ spring:
           predicates:
             - Path=/api/geo/**
 
-        - id: matching-service
-          uri: lb://matching-service
+        - id: coincidencias
+          uri: lb://coincidencias
           predicates:
             - Path=/api/matching/**
 
