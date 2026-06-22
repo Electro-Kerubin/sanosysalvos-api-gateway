@@ -110,12 +110,28 @@ services:
     container_name: sanosysalvos-geolocation-service
     restart: unless-stopped
     ports:
-      - "8084:8084"
+      - "8082:8082"
     environment:
       GEO_DB_URL: jdbc:postgresql://postgres:5432/sanosysalvos
       GEO_DB_USER: ${DB_USER}
       GEO_DB_PASSWORD: ${DB_PASSWORD}
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    depends_on:
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+
+  notification-service:
+    image: ${DOCKERHUB_USERNAME}/sanosysalvos-notification-service:latest
+    container_name: sanosysalvos-notification-service
+    restart: unless-stopped
+    ports:
+      - "8084:8084"
+    environment:
+      NOTIFICATION_DB_URL: jdbc:postgresql://postgres:5432/sanosysalvos
+      NOTIFICATION_DB_USER: ${DB_USER}
+      NOTIFICATION_DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
       postgres:
         condition: service_healthy
@@ -148,6 +164,7 @@ services:
       eureka-server:
         condition: service_healthy
 
+
   api-gateway:
     image: ${DOCKERHUB_USERNAME}/sanosysalvos-api-gateway:latest
     container_name: sanosysalvos-api-gateway
@@ -166,8 +183,11 @@ services:
         condition: service_started
       geolocation-service:
         condition: service_started
+      notification-service:
+        condition: service_started
       matching-service:
         condition: service_started
+        
 
 volumes:
   postgres_data:

@@ -16,7 +16,7 @@ spring:
           '[/**]':
             allowedOriginPatterns:
               - http://localhost:3000
-              - http://127.0.0.1:3000
+              - http://3.237.84.42
               - https://*.vercel.app
             allowedMethods:
               - GET
@@ -34,11 +34,11 @@ spring:
             maxAge: 3600
       routes:
         - id: auth-service
-          uri: lb://autenticacion
+          uri: lb://auth-service 
           predicates:
             - Path=/api/auth/**
 
-        - id: reportes-service
+        - id: report-service
           uri: lb://reportes
           predicates:
             - Path=/api/reportes/**
@@ -74,11 +74,16 @@ spring:
             - Path=/api/geo/**
 
         - id: matching-service
-          uri: lb://coincidencias
+          uri: lb://matching-service
           predicates:
             - Path=/api/matching/**
           filters:
             - RewritePath=/api/matching/(?<segment>.*), /api/coincidencias/${segment}
+
+        - id: notification-service
+          uri: lb://notificaciones
+          predicates:
+            - Path=/api/notificaciones/**
 
         # - id: matching-service-legacy-alias
         #   uri: lb://coincidencias
