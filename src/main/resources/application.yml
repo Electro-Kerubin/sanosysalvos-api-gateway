@@ -91,6 +91,11 @@ spring:
         #   predicates:
         #     - Path=/api/coincidencias/**
 
+        - id: chat-service
+          uri: lb://chat-service
+          predicates:
+            - Path=/api/chat/**
+
         - id: comunas-service
           uri: lb://geolocalizacion
           predicates:
